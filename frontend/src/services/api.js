@@ -4,24 +4,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 // Cria uma instância do Axios. Usaremos esta instância para todas as chamadas.
 const apiClient = axios.create({
-  baseURL: `${API_URL}/api/receitas`,
+  baseURL: `${API_URL}/api`,
+  // Necessário para o browser enviar o cookie HttpOnly automaticamente em cada requisição
+  withCredentials: true,
 });
-
-// Interceptor de Requisição: Adiciona o token JWT em todas as chamadas para a API.
-apiClient.interceptors.request.use(
-  (config) => {
-    // Pega o token do localStorage
-    const token = localStorage.getItem("userToken");
-    if (token) {
-      // Se o token existir, adiciona ao cabeçalho de autorização
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // Interceptor de Resposta: Lida com erros 401 (token expirado/inválido).
 apiClient.interceptors.response.use(
@@ -29,9 +15,8 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       console.error("Sessão expirada ou inválida. Redirecionando para o login.");
-      localStorage.removeItem("userToken");
+      // Não precisamos mais limpar o localStorage, o cookie é gerenciado pelo browser
       window.location.href = "/login";
-      // Lida com erros de rate limit (muitas requisições)
     } else if (error.response && error.response.status === 429) {
       console.error("Muitas requisições. Limite de taxa atingido.");
       alert("Você atingiu o limite de requisições. Por favor, tente novamente em alguns minutos.");
@@ -43,7 +28,7 @@ apiClient.interceptors.response.use(
 
 export const perguntarReceita = async (pergunta) => {
   try {
-    const response = await apiClient.post("perguntar", { pergunta });
+    const response = await apiClient.post("/receitas/perguntar", { pergunta });
     return response.data.resposta;
 
   } catch (error) {
@@ -54,7 +39,7 @@ export const perguntarReceita = async (pergunta) => {
 
 export const cadastrarUsuario = async (dadosUsuario) => {
   try {
-    const response = await apiClient.post("cadastrar", dadosUsuario);
+    const response = await apiClient.post("/auth/cadastrar", dadosUsuario);
     return response.data;
 
   } catch (error) {
@@ -64,6 +49,12 @@ export const cadastrarUsuario = async (dadosUsuario) => {
 };
 
 export const loginUsuario = async (dadosLogin) => {
-  const response = await apiClient.post("login", dadosLogin);
+  const response = await apiClient.post("/auth/login", dadosLogin);
+  return response.data;
+};
+
+// Chama o backend para verificar se o cookie de sessão ainda é válido
+export const verificarSessao = async () => {
+  const response = await apiClient.get("/auth/me");
   return response.data;
 };

@@ -53,7 +53,6 @@ const ChatReceitas = () => {
   }, [conversas]);
 
   const handleNovaConversa = () => {
-    debugger
     const novaConversa = criarNovaConversa();
     setConversas([novaConversa, ...conversas]);
     setConversaAtualId(novaConversa.id);
@@ -87,7 +86,6 @@ const ChatReceitas = () => {
       texto: textoMensagem,
       remetente: "usuario",
     };
-    //TODO Entender como esse blobo de codigo funciona
     // Atualiza a conversa correta com a nova mensagem do usuário
     const conversasAtualizadas = conversas.map((conversa) => {
       if (conversa.id === conversaAtualId) {

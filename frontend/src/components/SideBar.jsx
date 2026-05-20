@@ -10,14 +10,12 @@ const SideBar = ({ conversas, conversaAtualId, onNovaConversa, onSelecionarConve
                 <div className='flex gap-3'>
                     <div className='flex items-center justify-center'>
                         <img src={sopa3} className=' w-12 h-10 p-1 text-black bg-[#FF6B00ff] rounded-full'/>
-                    </div>
-                    {/* <img src={sopa3} alt="Logo DevChef" className="mr-4 w-12 h-12 self-center rounded-4xl bg-[#FF6B00ff] p-2" /> */}
+                    </div>                   
                     <div className='flex flex-col'>
                         <h2 className="text-lg font-bold font-mono leading-normal" >ChefIA</h2>
                         <p className=' text-[#a6a4a3e7] font-mono text-sm'>Assistente de receitas</p>
                     </div>              
                 </div>
-                {/* Botão X para fechar a sidebar no mobile */}
                 <button 
                     onClick={onClose}
                     className="md:hidden p-1 text-gray-500 hover:bg-gray-100 rounded-md focus:outline-none"

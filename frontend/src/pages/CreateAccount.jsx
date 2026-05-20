@@ -24,14 +24,15 @@ const CreateAccount = () => {
         try {
             // A API espera um objeto com 'usuario' e 'password'
             const dadosUsuario = { usuario: username, password: password };
-            await cadastrarUsuario(dadosUsuario);
+            await Promise.all([await cadastrarUsuario(dadosUsuario), new Promise(resolve => setTimeout(resolve, 800))])
+            
             setSuccess('Conta criada com sucesso! Redirecionando para o login...');
             setTimeout(() => {
                 // Redireciona para a página de login após 3 segundos
                 navigate('/login'); 
             }, 3000);
         } catch (err) {
-            setError('Erro ao criar a conta. Tente outro nome de usuário.');
+            setError('Erro ao criar conta.');
             console.error(err);
         }
     };

@@ -18,7 +18,6 @@ const Login = () => {
         setError('');
         setSuccess('');
         setLoading(true);
-        
 
         try {
             const dadosLogin = { usuario: username, password: password };
@@ -27,7 +26,7 @@ const Login = () => {
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             const response = await loginUsuario(dadosLogin);
-            
+
             // 1. Pega o token da resposta da API (response já é o objeto de dados)
             const { token, message } = response;
 
@@ -35,16 +34,13 @@ const Login = () => {
                 // 2. SALVA O TOKEN NO LOCALSTORAGE!
                 localStorage.setItem('userToken', token);
                 setSuccess(message || "Login bem-sucedido!");
-                
-                setTimeout(() => {
+
+                // Navega imediatamente para a próxima tela após salvar o token
                 navigate('/chat-receitas');
-            }, 2000)
-
-
             } else {
                 setError('Não foi possível obter o token de autenticação.');
             }
-            
+
         } catch (err) {
             // Exibe a mensagem de erro vinda da API ("Usuário ou senha inválidos.")
             setError(err.response?.data?.error || "Falha no login. Tente novamente.");
@@ -54,55 +50,55 @@ const Login = () => {
     };
 
     return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <form onSubmit={handleSubmit} className="p-10 space-y-6 bg-white rounded-lg shadow-xl w-96">
-            <h2 className="text-2xl font-bold text-center text-gray-800">Bem-vindo!</h2>
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="username">
-                    Usuário
-                </label>
-                <input 
-                    id="username"
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <form onSubmit={handleSubmit} className="p-10 space-y-6 bg-white rounded-lg shadow-xl w-96">
+                <h2 className="text-2xl font-bold text-center text-gray-800">Bem-vindo!</h2>
+                <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="username">
+                        Usuário
+                    </label>
+                    <input
+                        id="username"
+                        disabled={loading}
+                        className="w-full px-4 py-2 text-gray-700 bg-gray-50 border border-gray-300  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00ff] focus:border-transparent disabled:opacity-50 disabled:bg-gray-200"
+                        type="text"
+                        placeholder="Seu usuário"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="password">
+                        Senha
+                    </label>
+                    <input
+                        id="password"
+                        disabled={loading}
+                        className="w-full px-4 py-2 text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00ff] focus:border-transparent disabled:opacity-50 disabled:bg-gray-200"
+                        type="password"
+                        placeholder="Sua senha"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                {/* <button type="submit" className="w-full px-4 py-2 font-semibold text-white bg-[#FF6B00ff] rounded-md hover:bg-orange-600 transition-colors duration-300 cursor-pointer">Entrar</button> */}
+                <button
+                    type="submit"
                     disabled={loading}
-                    className="w-full px-4 py-2 text-gray-700 bg-gray-50 border border-gray-300  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00ff] focus:border-transparent disabled:opacity-50 disabled:bg-gray-200"  
-                    type="text" 
-                    placeholder="Seu usuário"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700" htmlFor="password">
-                    Senha
-                </label>
-                <input 
-                    id="password"
-                    disabled={loading}
-                    className="w-full px-4 py-2 text-gray-700 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00ff] focus:border-transparent disabled:opacity-50 disabled:bg-gray-200"  
-                    type="password" 
-                    placeholder="Sua senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            {/* <button type="submit" className="w-full px-4 py-2 font-semibold text-white bg-[#FF6B00ff] rounded-md hover:bg-orange-600 transition-colors duration-300 cursor-pointer">Entrar</button> */}
-            <button
-                type="submit"
-                disabled={loading}
-                className={`w-full px-4 py-2 font-semibold text-white rounded-md transition-colors duration-300 ${changeLoadingColor}`}
-            >
-                {loading ? 'Entrando...' : 'Entrar'}
-            </button>
-            {error && <p className="text-sm text-center text-red-500">{error}</p>}
-            {success && <p className="text-sm text-center text-green-500">{success}</p>}
-            <p className="text-sm text-center text-gray-600">
-                Não tem uma conta?{' '}
-                <button type="button" onClick={() => navigate('/criar-conta')} className="font-medium text-blue-500 hover:underline">Crie uma</button>
-            </p>
-        </form>
-    </div>    
+                    className={`w-full px-4 py-2 font-semibold text-white rounded-md transition-colors duration-300 ${changeLoadingColor}`}
+                >
+                    {loading ? 'Entrando...' : 'Entrar'}
+                </button>
+                {error && <p className="text-sm text-center text-red-500">{error}</p>}
+                {success && <p className="text-sm text-center text-green-500">{success}</p>}
+                <p className="text-sm text-center text-gray-600">
+                    Não tem uma conta?{' '}
+                    <button type="button" onClick={() => navigate('/criar-conta')} className="font-medium text-blue-500 hover:underline">Crie uma</button>
+                </p>
+            </form>
+        </div>
     )
 }
 

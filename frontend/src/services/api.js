@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 // Cria uma instância do Axios. Usaremos esta instância para todas as chamadas.
 const apiClient = axios.create({

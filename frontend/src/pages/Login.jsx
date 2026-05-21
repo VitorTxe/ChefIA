@@ -28,7 +28,7 @@ const Login = () => {
                 new Promise((resolve) => setTimeout(resolve, 800))
             ]);
 
-            // Pega apenas a mensagem de sucesso (o cookie já foi salvo pelo navegador nos bastidores)
+            // Pega apenas a mensagem de sucesso (o cookie já foi salvo pelo navegador)
             const { message } = response;
 
             setSuccess(message || "Login bem-sucedido!");

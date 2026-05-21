@@ -73,8 +73,8 @@ export const loginUsuario = async (req, res) => {
         // Se tudo estiver correto, envia o token como cookie HttpOnly
         res.cookie('token', token, {
             httpOnly: true,   // Impede acesso via JavaScript (protége contra XSS)
-            secure: process.env.NODE_ENV === 'production', // Apenas HTTPS em produção
-            sameSite: 'strict', // Protege contra ataques CSRF
+            secure: true,     // Obrigatório ser true quando sameSite é 'none'
+            sameSite: 'none', // Permite envio do cookie entre domínios diferentes (cross-site)
             maxAge: 300000    // 5 minutos em milissegundos
         });
 
@@ -112,8 +112,8 @@ export const verificarSessao = (req, res) => {
 export const logoutUsuario = (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
     });
     return res.status(200).json({ message: "Logout realizado com sucesso" });
 };

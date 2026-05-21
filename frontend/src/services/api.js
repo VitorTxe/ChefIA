@@ -14,8 +14,13 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
+      // Se o erro 401 vier da própria tentativa de login, NÃO redirecionamos
+      // para não causar um "reload" na página e apagar a mensagem de erro.
+      if (error.config && error.config.url.includes("/auth/login")) {
+        return Promise.reject(error);
+      }
+
       console.error("Sessão expirada ou inválida. Redirecionando para o login.");
-      // Não precisamos mais limpar o localStorage, o cookie é gerenciado pelo browser
       window.location.href = "/login";
     } else if (error.response && error.response.status === 429) {
       console.error("Muitas requisições. Limite de taxa atingido.");
@@ -56,5 +61,11 @@ export const loginUsuario = async (dadosLogin) => {
 // Chama o backend para verificar se o cookie de sessão ainda é válido
 export const verificarSessao = async () => {
   const response = await apiClient.get("/auth/me");
+  return response.data;
+};
+
+// Chama o backend para invalidar/remover o cookie de sessão
+export const logoutUsuario = async () => {
+  const response = await apiClient.post("/auth/logout");
   return response.data;
 };

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ListaMensagens from "../components/ListaMensagens";
 import ChatBox from "../components/ChatBox";
 import SideBar from "../components/SideBar";
-import {perguntarReceita} from '../services/api';
+import { perguntarReceita, logoutUsuario } from '../services/api';
 import { useNavigate } from "react-router";
 
 const MENSAGEM_INICIAL = {
@@ -32,7 +32,7 @@ const ChatReceitas = () => {
     if (conversasSalvas.length > 0) {
       setConversas(conversasSalvas);
       // Define a mais recente como ativa
-      setConversaAtualId(conversasSalvas[0].id); 
+      setConversaAtualId(conversasSalvas[0].id);
 
     } else {
       const novaConversa = criarNovaConversa();
@@ -70,16 +70,16 @@ const ChatReceitas = () => {
     // Se não houver mais conversas, cria uma nova
     if (conversasRestantes.length === 0) {
       handleNovaConversa();
-    } 
+    }
     // Se a conversa deletada era a ativa, seleciona a primeira da lista restante
     else if (conversaAtualId === idParaDeletar) {
       setConversaAtualId(conversasRestantes[0].id);
     }
 
-    
+
   };
 
-  
+
   const onEnviarMensagem = async (textoMensagem) => {
     const novaMensagemUsuario = {
       id: Date.now(),
@@ -131,16 +131,23 @@ const ChatReceitas = () => {
   const conversaAtual = conversas.find((c) => c.id === conversaAtualId);
   const mensagensAtuais = conversaAtual ? conversaAtual.mensagens : [];
 
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logoutUsuario();
+
+    } catch (e) {
+      console.error(e);
+
+    } finally {
+      navigate("/login");
+    }
   }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F8F9FAff] font-sans">
       {/* Overlay escuro para mobile quando a sidebar estiver aberta */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
@@ -160,35 +167,35 @@ const ChatReceitas = () => {
         onClose={() => setIsSidebarOpen(false)}
       />
 
-        {/* Área de Conteúdo Principal */}
-        <main className="flex-1 flex flex-col w-full">
-          <header className="flex flex-row items-center border-b border-[#e4e6e9] p-4">
-            <button 
-              className="md:hidden mr-4 p-2 text-gray-600 hover:bg-gray-100 rounded-md focus:outline-none"
-              onClick={() => setIsSidebarOpen(true)}
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
-            <div className="flex flex-col">
-              <h1 className="text-2xl text-black leading-normal font-mono font-bold min-w-72 ">
-                ChefIA Chat
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Seu assistente pessoal de receitas com IA. O que você tem na geladeira hoje?
-              </p>
-            </div>
-          </header>
-
-          <div className="flex-1 overflow-y-auto p-6 gap-6">
-            <div className="flex flex-col gap-6 max-w-6xl h-full mx-auto">
-              <ListaMensagens mensagens={mensagensAtuais} loading={loading} />
-              <ChatBox onEnviarMensagem={onEnviarMensagem} processing={processing}/>
-            </div>
+      {/* Área de Conteúdo Principal */}
+      <main className="flex-1 flex flex-col w-full">
+        <header className="flex flex-row items-center border-b border-[#e4e6e9] p-4">
+          <button
+            className="md:hidden mr-4 p-2 text-gray-600 hover:bg-gray-100 rounded-md focus:outline-none"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <div className="flex flex-col">
+            <h1 className="text-2xl text-black leading-normal font-mono font-bold min-w-72 ">
+              ChefIA Chat
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Seu assistente pessoal de receitas com IA. O que você tem na geladeira hoje?
+            </p>
           </div>
-        </main>
-      </div>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-6 gap-6">
+          <div className="flex flex-col gap-6 max-w-6xl h-full mx-auto">
+            <ListaMensagens mensagens={mensagensAtuais} loading={loading} />
+            <ChatBox onEnviarMensagem={onEnviarMensagem} processing={processing} />
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
 

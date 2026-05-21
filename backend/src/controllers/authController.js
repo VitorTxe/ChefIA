@@ -90,7 +90,7 @@ export const usuario = async (req, res) => {
 
     try {
         users = await prisma.user.findMany({
-            select : {
+            select: {
                 id: true,
                 usuario: true
             }
@@ -103,6 +103,17 @@ export const usuario = async (req, res) => {
 
 // Rota usada pelo frontend para verificar se a sessão ainda é válida
 // O authMiddleware já valida o cookie. Se chegar aqui, o usuário está autenticado.
+//TODO Estudar essa rota 
 export const verificarSessao = (req, res) => {
     res.status(200).json({ autenticado: true, usuario: req.userUsuario });
+};
+
+// Rota de Logout para limpar o cookie do navegador
+export const logoutUsuario = (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+    });
+    return res.status(200).json({ message: "Logout realizado com sucesso" });
 };

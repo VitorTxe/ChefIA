@@ -1,0 +1,71 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # -------------------------------------------------------------
+  # Job 1: Qualidade e Compilação do Frontend
+  # -------------------------------------------------------------
+  frontend-ci:
+    name: Frontend (Lint & Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências raiz e workspaces
+        run: npm ci
+
+      - name: Executar Linting (ESLint)
+        run: npm run lint --workspace=frontend
+
+      - name: Compilar Build de Produção (Vite)
+        run: npm run build --workspace=frontend
+
+  # -------------------------------------------------------------
+  # Job 2: Testes Automatizados e Schema do Backend
+  # -------------------------------------------------------------
+  backend-ci:
+    name: Backend (Prisma & Jest Tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências raiz e workspaces
+        run: npm ci
+
+      - name: Gerar Client do Prisma
+        run: npx prisma generate --schema=backend/prisma/schema.prisma
+
+      - name: Executar Testes Unitários e Integração (Jest)
+        run: npm run test --workspace=backend
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ci_secret_jest_mock_key

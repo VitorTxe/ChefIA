@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-vm-modules ../node_modules/jest/bin/jest.js --runInBand",
     "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -29,6 +29,7 @@
     "openai": "^6.10.0"
   },
   "devDependencies": {
+    "jest": "^30.5.1",
     "prisma": "6.19"
   }
 }

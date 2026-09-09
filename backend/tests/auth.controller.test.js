@@ -180,8 +180,8 @@ describe('authController (src/controllers/auth.Controller.js)', () => {
 
       expect(res.cookie).toHaveBeenCalledWith('token', 'jwt_token_gerado', {
         httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 300000,
       });
 

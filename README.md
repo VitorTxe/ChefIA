@@ -1,4 +1,4 @@
-# 👨‍🍳 ChefIA (DevChef2)
+# 👨‍🍳 ChefIA
 
 Seu assistente pessoal de receitas com IA! O ChefIA ajuda você a descobrir o que cozinhar com base nos ingredientes que você já tem na sua geladeira. 
 

@@ -66,6 +66,8 @@ jobs:
 
       - name: Gerar Client do Prisma
         run: npm --workspace=backend exec prisma generate
+        env:
+          DATABASE_URL: mongodb://localhost:27017/devchef_ci
 
       - name: Executar Testes Unitários e Integração (Jest)
         run: npm run test --workspace=backend

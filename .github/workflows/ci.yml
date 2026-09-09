@@ -38,6 +38,9 @@ jobs:
       - name: Executar Linting (ESLint)
         run: npm run lint --workspace=frontend
 
+      - name: Instalar binário nativo do Rollup para Linux
+        run: npm install --save-optional @rollup/rollup-linux-x64-gnu --workspace=frontend
+
       - name: Compilar Build de Produção (Vite)
         run: npm run build --workspace=frontend
 
@@ -62,7 +65,7 @@ jobs:
         run: npm ci
 
       - name: Gerar Client do Prisma
-        run: npx prisma generate --schema=backend/prisma/schema.prisma
+        run: npm --workspace=backend exec prisma generate
 
       - name: Executar Testes Unitários e Integração (Jest)
         run: npm run test --workspace=backend

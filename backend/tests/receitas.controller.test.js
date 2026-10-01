@@ -2,7 +2,7 @@ import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 
 const mockObterRespostaReceita = jest.fn();
 
-jest.unstable_mockModule('../src/services/openai.services.js', () => ({
+jest.unstable_mockModule('../src/services/gemini.services.js', () => ({
   default: mockObterRespostaReceita,
 }));
 
@@ -40,7 +40,7 @@ describe('receitasController (src/controllers/receitas.controller.js)', () => {
       expect(mockObterRespostaReceita).not.toHaveBeenCalled();
     });
 
-    it('deve retornar status 200 com a resposta da OpenAI quando a pergunta for válida', async () => {
+    it('deve retornar status 200 com a resposta do Gemini quando a pergunta for válida', async () => {
       const { req, res } = createMockContext();
       req.body = { pergunta: 'O que posso cozinhar com frango e batatas?' };
 
@@ -54,7 +54,7 @@ describe('receitasController (src/controllers/receitas.controller.js)', () => {
       expect(res.json).toHaveBeenCalledWith({ resposta: respostaMockIA });
     });
 
-    it('deve retornar status 500 se o serviço da OpenAI disparar uma exceção', async () => {
+    it('deve retornar status 500 se o serviço do Gemini disparar uma exceção', async () => {
       const { req, res } = createMockContext();
       req.body = { pergunta: 'Receita rápida' };
 

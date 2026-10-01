@@ -33,7 +33,7 @@ jest.unstable_mockModule('jsonwebtoken', () => ({
   default: mockJwt,
 }));
 
-const { cadastrarUsuario, loginUsuario, verificarSessao } = await import('../src/controllers/auth.Controller.js');
+const { cadastrarUsuario, loginUsuario, verificarSessao } = await import('../src/controllers/auth.controller.js');
 
 const createMockContext = () => {
   const req = {
@@ -52,7 +52,7 @@ const createMockContext = () => {
   return { req, res };
 };
 
-describe('authController (src/controllers/auth.Controller.js)', () => {
+describe('authController (src/controllers/auth.controller.js)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

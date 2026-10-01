@@ -1,4 +1,4 @@
-import obterRespostaReceita from "../services/openai.services.js";
+import obterRespostaReceita from "../services/gemini.services.js";
 
 export const perguntarReceita = async (req, res) => {
   try {
@@ -12,8 +12,12 @@ export const perguntarReceita = async (req, res) => {
 
     const resposta = await obterRespostaReceita(pergunta);
 
-    res.status(200).json({ resposta });
+    return res.status(200).json({ resposta });
   } catch (error) {
-    res.status(500).json({ erro: "Erro ao processar sua pergunta" });
+    console.error("Erro no controlador de receitas ao processar pergunta:", {
+      message: error.message,
+      stack: error.stack,
+    });
+    return res.status(500).json({ erro: "Erro ao processar sua pergunta" });
   }
 };

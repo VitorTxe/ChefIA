@@ -1,9 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_KEY;
+
+if (!apiKey) {
+  console.warn("Aviso: GEMINI_API_KEY não foi encontrada nas variáveis de ambiente.");
+}
 
 const ai = new GoogleGenAI({
   apiKey: apiKey,
@@ -23,8 +30,10 @@ A receita sugerida deve ser saborosa, fácil de preparar e bem explicada, mesmo 
 
 const obterRespostaReceita = async (pergunta) => {
   try {
+    const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+
     const response = await ai.models.generateContent({
-      model: process.env.GEMINI_MODEL || "gemini-3.5-flash",
+      model: model,
       contents: pergunta,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,

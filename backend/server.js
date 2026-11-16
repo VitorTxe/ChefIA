@@ -1,3 +1,10 @@
+import dotenv from "dotenv";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+
 import express from "express";
 import receitasRoutes from './src/routes/receitas.route.js'
 import authRoutes from './src/routes/auth.route.js'
@@ -11,7 +18,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 const corsOptions = {
-    origin: [process.env.FRONTEND_URL, 'http://localhost:5174'],
+    origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'authorization'],
     // Necessário para o browser enviar cookies automaticamente nas requisições
